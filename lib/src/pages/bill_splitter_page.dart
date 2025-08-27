@@ -155,7 +155,10 @@ class _BillSplitterPageState extends State<BillSplitterPage> {
                                   return LongPressDraggable<ItemGroup>(
                                     data: item,
                                     feedback: DraggingChip(item: item),
-                                    child: UnassignedChip(item: item),
+                                    child: MyCustomChip.unassigned(
+                                      context,
+                                      item,
+                                    ),
                                     onDragCompleted: () => context
                                         .read<BillCubit>()
                                         .moveToAux(item),
@@ -194,7 +197,12 @@ class _BillSplitterPageState extends State<BillSplitterPage> {
                                     alignment: WrapAlignment.start,
                                     spacing: 4,
                                     children: state.auxItems
-                                        .map((i) => AssignedChip(item: i))
+                                        .map(
+                                          (item) => MyCustomChip.assigned(
+                                            context,
+                                            item,
+                                          ),
+                                        )
                                         .toList(),
                                   ),
                                 ),

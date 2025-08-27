@@ -75,7 +75,7 @@ class BillCubit extends Cubit<BillState> {
 
   void reset() {
     final originalItems = state.originalItems
-        .map((i) => ItemGroup(i.name, i.unitPrice, i.initialQuantity))
+        .map((i) => i..quantity = i.initialQuantity)
         .toList();
     emit(
       BillState(originalItems: originalItems, auxItems: [], assignedItems: []),
