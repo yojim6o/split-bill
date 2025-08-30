@@ -22,9 +22,8 @@ class GemmaPlugin implements AIService {
 
     await _gemma.modelManager.deleteModel();
 
-    final stream = _gemma.modelManager.downloadModelFromNetworkWithProgress(
-        model.url,
-        token: "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");
+    final stream = _gemma.modelManager
+        .downloadModelFromNetworkWithProgress(model.url, token: "");
 
     // Wait for stream to complete - same logic as original but with new downloader
     await for (final progress in stream) {
