@@ -5,27 +5,15 @@ import 'package:split_bill/src/models/diner.dart';
 import 'package:split_bill/src/models/item_group.dart';
 
 class BillCubit extends Cubit<BillState> {
-  BillCubit()
-    : super(
-        BillState(
-          originalItems: [
-            ItemGroup("Patatas fritas", 2.0, 4),
-            ItemGroup("Calamares", 4.0, 2),
-            ItemGroup("Bravas", 3.0, 3),
-            ItemGroup("Cola", 3.0, 3),
-            ItemGroup("Agua", 3.0, 3),
-            ItemGroup("Pizza Margarita", 3.0, 3),
-            ItemGroup("Tiramisu", 3.0, 3),
-            ItemGroup("Cafe", 3.0, 3),
-            ItemGroup("Manzanilla", 3.0, 3),
-            ItemGroup("Sepia", 3.0, 3),
-            ItemGroup("Fanta", 3.0, 3),
-            ItemGroup("Carajillo", 3.0, 3),
-          ],
-          auxItems: [],
-          assignedItems: [],
-        ),
-      );
+  final List<ItemGroup> itemsList;
+  BillCubit(this.itemsList)
+      : super(
+          BillState(
+            originalItems: itemsList,
+            auxItems: [],
+            assignedItems: [],
+          ),
+        );
 
   void moveToAux(ItemGroup item) {
     if (item.quantity <= 0) return;

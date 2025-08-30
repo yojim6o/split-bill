@@ -4,7 +4,7 @@ publish_to: "none"
 version: 0.1.0
 
 environment:
-  sdk: ^3.8.1
+  sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
   flutter:
@@ -12,6 +12,13 @@ dependencies:
   flutter_bloc: ^8.1.1
   flex_color_scheme: ^8.2.0
   google_fonts: ^6.2.1
+  camera: ^0.11.2
+  path_provider: ^2.1.5
+  path: ^1.9.1
+  equatable: ^2.0.0
+  flutter_gemma: ^0.10.4
+  firebase_core: ^4.0.0
+  firebase_ai: ^3.1.0
 
 dev_dependencies:
   flutter_test:
@@ -20,3 +27,5 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/images/

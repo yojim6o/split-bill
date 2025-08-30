@@ -6,9 +6,8 @@ import 'package:split_bill/src/models/assigned_item.dart';
 import 'package:split_bill/src/models/diner.dart';
 import 'package:split_bill/src/models/item_group.dart';
 import 'package:split_bill/src/utils/extensions.dart';
-import 'package:split_bill/src/widgets/assigned_chip.dart';
+import 'package:split_bill/src/widgets/my_custom_chip.dart';
 import 'package:split_bill/src/widgets/dragging_chip.dart';
-import 'package:split_bill/src/widgets/unassigned_chip.dart';
 
 class BillSplitterPage extends StatefulWidget {
   const BillSplitterPage({super.key});
@@ -121,125 +120,121 @@ class _BillSplitterPageState extends State<BillSplitterPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => BillCubit(),
-      child: Scaffold(
-        body: BlocBuilder<BillCubit, BillState>(
-          builder: (context, state) {
-            final totalRemaining = state.originalItems.fold(
-              0.0,
-              (sum, i) => sum + i.unitPrice * i.quantity,
-            );
-            final totalAssigned = state.assignedItems.fold(
-              0.0,
-              (sum, i) => sum + i.totalPrice,
-            );
+    return Scaffold(
+      body: BlocBuilder<BillCubit, BillState>(
+        builder: (context, state) {
+          final totalRemaining = state.originalItems.fold(
+            0.0,
+            (sum, i) => sum + i.unitPrice * i.quantity,
+          );
+          final totalAssigned = state.assignedItems.fold(
+            0.0,
+            (sum, i) => sum + i.totalPrice,
+          );
 
-            return SafeArea(
-              child: Stack(
-                children: [
-                  Column(
-                    children: [
-                      Text(
-                        "Total por asignar: ${totalRemaining.toStringAsFixed(2)}€",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      Expanded(
-                        child: SingleChildScrollView(
-                          child: Wrap(
-                            alignment: WrapAlignment.start,
-                            spacing: 4,
-                            children: state.originalItems
-                                .where((i) => i.quantity > 0)
-                                .map((item) {
-                                  return LongPressDraggable<ItemGroup>(
-                                    data: item,
-                                    feedback: DraggingChip(item: item),
-                                    child: MyCustomChip.unassigned(
-                                      context,
-                                      item,
-                                    ),
-                                    onDragCompleted: () => context
-                                        .read<BillCubit>()
-                                        .moveToAux(item),
-                                  );
-                                })
-                                .toList(),
-                          ),
+          return SafeArea(
+            child: Stack(
+              children: [
+                Column(
+                  children: [
+                    Text(
+                      "Total por asignar: ${totalRemaining.toStringAsFixed(2)}€",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Wrap(
+                          alignment: WrapAlignment.start,
+                          spacing: 4,
+                          children: state.originalItems
+                              .where((i) => i.quantity > 0)
+                              .map((item) {
+                            return LongPressDraggable<ItemGroup>(
+                              data: item,
+                              feedback: DraggingChip(item: item),
+                              child: MyCustomChip.unassigned(
+                                context,
+                                item,
+                              ),
+                              onDragCompleted: () =>
+                                  context.read<BillCubit>().moveToAux(item),
+                            );
+                          }).toList(),
                         ),
                       ),
-                      const Divider(height: 10),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text("Arrastra items aquí"),
-                          const Icon(Icons.arrow_downward_rounded),
-                        ],
-                      ),
-                      const Divider(height: 10),
-                      Expanded(
-                        child: Container(
-                          width: double.infinity,
-                          margin: EdgeInsets.all(4),
-                          decoration: BoxDecoration(
-                            color: context.colorScheme.surfaceContainerHigh,
-                            borderRadius: BorderRadius.all(Radius.circular(20)),
-                          ),
-                          child: DragTarget<ItemGroup>(
-                            builder: (context, candidateData, rejectedData) {
-                              if (state.auxItems.isEmpty) {
-                                return const Center(child: Text("Vacía"));
-                              }
-                              return SingleChildScrollView(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Wrap(
-                                    alignment: WrapAlignment.start,
-                                    spacing: 4,
-                                    children: state.auxItems
-                                        .map(
-                                          (item) => MyCustomChip.assigned(
-                                            context,
-                                            item,
-                                          ),
-                                        )
-                                        .toList(),
-                                  ),
+                    ),
+                    const Divider(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text("Arrastra items aquí"),
+                        const Icon(Icons.arrow_downward_rounded),
+                      ],
+                    ),
+                    const Divider(height: 10),
+                    Expanded(
+                      child: Container(
+                        width: double.infinity,
+                        margin: EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: context.colorScheme.surfaceContainerHigh,
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                        ),
+                        child: DragTarget<ItemGroup>(
+                          builder: (context, candidateData, rejectedData) {
+                            if (state.auxItems.isEmpty) {
+                              return const Center(child: Text("Vacía"));
+                            }
+                            return SingleChildScrollView(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Wrap(
+                                  alignment: WrapAlignment.start,
+                                  spacing: 4,
+                                  children: state.auxItems
+                                      .map(
+                                        (item) => MyCustomChip.assigned(
+                                          context,
+                                          item,
+                                        ),
+                                      )
+                                      .toList(),
                                 ),
-                              );
-                            },
-                          ),
+                              ),
+                            );
+                          },
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            ElevatedButton(
-                              onPressed: state.auxItems.isEmpty
-                                  ? null
-                                  : () => showAssignDialog(
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          ElevatedButton(
+                            onPressed: state.auxItems.isEmpty
+                                ? null
+                                : () => showAssignDialog(
                                       context,
                                       state.auxItems.toList(),
                                       diners,
                                     ),
-                              child: const Text("Asignar items a..."),
-                            ),
-                            const SizedBox(width: 10),
-                            ElevatedButton(
-                              onPressed: state.auxItems.isEmpty
-                                  ? null
-                                  : () => context.read<BillCubit>().clearAux(),
-                              child: const Text("Limpiar"),
-                            ),
-                          ],
-                        ),
+                            child: const Text("Asignar items a..."),
+                          ),
+                          const SizedBox(width: 10),
+                          ElevatedButton(
+                            onPressed: state.auxItems.isEmpty
+                                ? null
+                                : () => context.read<BillCubit>().clearAux(),
+                            child: const Text("Limpiar"),
+                          ),
+                        ],
                       ),
-                      //Text("Total asignado: \${totalAssigned.toStringAsFixed(2)€}"),
-                    ],
-                  ),
-                  /*  DraggableScrollableSheet(
+                    ),
+                    //Text("Total asignado: \${totalAssigned.toStringAsFixed(2)€}"),
+                  ],
+                ),
+                /*  DraggableScrollableSheet(
                     initialChildSize: 0.06,
                     minChildSize: 0.06,
                     maxChildSize: 0.5,
@@ -257,7 +252,7 @@ class _BillSplitterPageState extends State<BillSplitterPage> {
                           );
                         },
                   ), */
-                  /*
+                /*
                   Expanded(
   flex: 1,
   child: Row(
@@ -305,11 +300,10 @@ class _BillSplitterPageState extends State<BillSplitterPage> {
   ),
 ),
  */
-                ],
-              ),
-            );
-          },
-        ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }

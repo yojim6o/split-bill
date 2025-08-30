@@ -5,7 +5,11 @@ class ItemGroup {
   int quantity;
 
   ItemGroup(this.name, this.unitPrice, this.quantity)
-    : initialQuantity = quantity;
+      : initialQuantity = quantity;
+
+  factory ItemGroup.fromJson(Map<String, dynamic> value) {
+    return ItemGroup(value['name'], value['price'], value['quantity']);
+  }
 
   ItemGroup copyWith({int? quantity}) =>
       ItemGroup(name, unitPrice, quantity ?? this.quantity);

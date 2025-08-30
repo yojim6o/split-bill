@@ -19,7 +19,7 @@ class MyCustomChip extends StatelessWidget {
     return MyCustomChip._(
       item: item,
       selected: false,
-      color: context.colorScheme.surfaceContainerHighest,
+      color: Color(0xFFFCE7C1),
     );
   }
 
